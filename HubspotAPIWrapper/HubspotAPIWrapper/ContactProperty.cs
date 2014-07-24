@@ -8,10 +8,12 @@ namespace HubspotAPIWrapper
 
         private const string ContactListsApiVersion = "v1";
 
+				private string _clientId;
         public ContactProperty(string apiKey = null, string accessToken = null, string refreshToken = null,
                                 string clientId = null)
             : base(apiKey, accessToken, refreshToken, clientId)
         {
+					_clientId = clientId;
         }
 
         protected override string GetPath(string method)
@@ -32,8 +34,15 @@ namespace HubspotAPIWrapper
 
         public JsonObject UpdateExistingProperty(string property, string data)
         {
-            var subpath = string.Format("properties/{0}", property);
-            return Call(subpath: subpath, method: "POST", contentType: " application/json", data: data);
+					JsonObject obj = new JsonObject();
+					var param = new JsonObject();
+					param["property"] = "studiopassword";
+					param["value"] = "studiopassword";
+					var array = new JsonArray(param);
+					obj["properties"] = array;
+
+            var subpath = string.Format("contact/vid/{0}/profile",_clientId);
+            return Call(subpath: subpath, method: "POST", contentType: " application/json", data: obj.ToString());
         }
 
         public JsonObject DeleteProperty(string property)
